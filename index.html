@@ -1,0 +1,951 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>大字时钟 · 商品详情页 样稿 v1</title>
+<style>
+  :root{
+    --paper:#f4efe6;
+    --paper2:#efe7db;
+    --card:#fbf8f3;
+    --ink:#2f2a25;
+    --ink2:#544b42;
+    --ink3:#8c7f71;
+    --brown:#6b4a33;
+    --brown2:#8a6547;
+    --clay:#b46a4a;
+    --sand:#e6d8c6;
+    --line:#ddd0be;
+    --serif:"Songti SC","STSong","Source Han Serif SC","Noto Serif CJK SC",serif;
+    --sans:"PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    background:#e9e2d6;
+    font-family:var(--sans);
+    color:var(--ink);
+    -webkit-font-smoothing:antialiased;
+  }
+
+  /* 样稿提示条：正式发布前删掉 */
+  .draftbar{
+    max-width:750px;margin:0 auto;padding:12px 20px;
+    background:#fdf2ef;border-bottom:1px dashed #d8a08e;
+    font-size:13px;line-height:1.7;color:#9c5334;
+  }
+  .draftbar b{color:#b4462f;}
+
+  .page{
+    width:100%;max-width:750px;margin:0 auto;
+    background:var(--paper);
+    background-image:radial-gradient(circle at 18% 6%,rgba(255,255,255,.55),transparent 62%);
+    overflow:hidden;
+  }
+
+  /* 每一屏 */
+  .s{
+    position:relative;
+    padding:56px 52px;
+    border-bottom:1px solid var(--line);
+  }
+  .s.tight{padding:40px 52px;}
+  .s.dark{
+    background:#2b2622;
+    background-image:radial-gradient(circle at 70% 20%,rgba(180,106,74,.25),transparent 60%);
+    color:#f4efe6;
+  }
+  .s.dark .kicker{color:#b98f6d;}
+  .s.dark .note{color:#c9bbaa;}
+
+  .kicker{
+    font-size:20px;letter-spacing:6px;color:var(--brown2);
+    margin:0 0 18px;font-weight:600;
+  }
+  .h{
+    font-family:var(--serif);
+    font-size:58px;line-height:1.32;
+    margin:0 0 20px;font-weight:700;
+    letter-spacing:2px;
+  }
+  .h.small{font-size:46px;}
+  .h .em{color:var(--clay);}
+  .note{
+    font-size:24px;line-height:1.85;color:var(--ink2);
+    margin:0;letter-spacing:0.6px;
+  }
+  .note + .note{margin-top:12px;}
+  .tiny{
+    font-size:19px;line-height:1.8;color:var(--ink3);margin:16px 0 0;letter-spacing:0.4px;
+  }
+
+  /* 视频播放器 */
+  .player{position:relative;margin:0 0 18px;border-radius:8px;overflow:hidden;background:#1e1a17;}
+  .stage{position:relative;width:100%;aspect-ratio:16/9;overflow:hidden;cursor:pointer;
+    background:#241e19;font-size:16px;}
+  .sc{position:absolute;inset:0;opacity:0;transition:opacity .55s ease;
+    background-size:cover;background-position:center;}
+  .sc.on{opacity:1;}
+  .sc::after{content:"";position:absolute;inset:0;pointer-events:none;
+    background:linear-gradient(to top,rgba(18,14,11,.80) 0%,rgba(18,14,11,.20) 46%,rgba(18,14,11,.04) 100%);}
+  .sc .in{position:absolute;inset:0;z-index:2;display:flex;flex-direction:column;
+    align-items:center;justify-content:center;text-align:center;padding:0 1.2em;}
+  .sc .cap{position:absolute;left:1.1em;top:.8em;z-index:3;
+    font-size:.6em;color:rgba(246,240,230,.82);letter-spacing:.05em;}
+  .sc .cap b{color:#ffd2a8;margin-right:.45em;font-weight:600;}
+  .sub{position:absolute;left:50%;bottom:.85em;transform:translateX(-50%);z-index:4;
+    max-width:86%;text-align:center;font-size:clamp(11px,1.7vw,13px);line-height:1.6;color:#fff;
+    background:rgba(12,9,7,.46);padding:.28em .9em;border-radius:.35em;letter-spacing:.04em;}
+  .vt{font-weight:800;color:#fdf7ec;line-height:1;letter-spacing:.01em;
+    text-shadow:0 3px 22px rgba(0,0,0,.42);}
+  .vd{color:#e9dac6;letter-spacing:.2em;}
+  .vtag{padding:.35em .95em;border-radius:2em;background:rgba(255,241,226,.94);
+    color:#7a4a2b;letter-spacing:.08em;font-weight:600;}
+  .ctrl{display:flex;align-items:center;gap:12px;padding:9px 13px;background:#1e1a17;}
+  .btn{width:26px;height:26px;flex:0 0 26px;border:0;border-radius:50%;padding:0;
+    background:rgba(244,239,230,.16);cursor:pointer;
+    display:flex;align-items:center;justify-content:center;}
+  .btn:hover{background:rgba(244,239,230,.3);}
+  .btn.snd{font-size:13px;color:#f4efe6;letter-spacing:0;}
+  .btn.snd.off{opacity:.34;text-decoration:line-through;}
+  .tri{width:0;height:0;border-left:9px solid #f4efe6;
+    border-top:6px solid transparent;border-bottom:6px solid transparent;margin-left:2px;}
+  .pausebar{display:flex;gap:3px;}
+  .pausebar i{display:block;width:3px;height:12px;background:#f4efe6;border-radius:1px;}
+  .bar{flex:1;height:4px;background:rgba(244,239,230,.18);border-radius:2px;
+    cursor:pointer;position:relative;}
+  .fill{position:absolute;left:0;top:0;bottom:0;width:0;background:#d9a878;border-radius:2px;}
+  .tc{font-size:12.5px;color:rgba(244,239,230,.62);letter-spacing:.5px;
+    font-variant-numeric:tabular-nums;}
+  .bigplay{position:absolute;inset:0;z-index:5;display:flex;align-items:center;justify-content:center;
+    background:rgba(18,14,11,.26);cursor:pointer;transition:opacity .25s;}
+  .bigplay.hide{opacity:0;pointer-events:none;}
+  .bigplay span{width:74px;height:74px;border-radius:50%;border:2px solid rgba(244,239,230,.7);
+    display:flex;align-items:center;justify-content:center;background:rgba(244,239,230,.12);}
+  .bigplay span i{width:0;height:0;border-left:22px solid rgba(250,245,236,.95);
+    border-top:14px solid transparent;border-bottom:14px solid transparent;margin-left:6px;}
+  .bigplay .hint{position:absolute;left:0;right:0;top:calc(50% + 58px);text-align:center;
+    font-size:13.5px;color:rgba(250,245,236,.78);letter-spacing:1px;}
+  .line{border-bottom:1px solid var(--line);padding:9px 0;font-size:17px;line-height:1.7;}
+  .line:last-child{border-bottom:0;}
+  .line b{display:inline-block;width:74px;color:var(--brown);font-size:14px;letter-spacing:.5px;}
+  .shots{
+    display:flex;gap:8px;flex-wrap:wrap;margin:0;
+  }
+  .shots span{
+    font-size:16px;color:var(--ink3);
+    border:1px solid var(--line);border-radius:20px;
+    padding:5px 13px;letter-spacing:.5px;
+  }
+  .s.dark .shots span{color:#c9bbaa;border-color:#4a423b;}
+
+  /* 钟体 */
+  .clock{
+    position:relative;background:var(--card);
+    border:10px solid var(--brown);
+    border-radius:14px;
+    box-shadow:0 14px 34px rgba(80,58,40,.18),inset 0 0 0 1px rgba(255,255,255,.6);
+    display:flex;flex-direction:column;
+    align-items:center;justify-content:center;
+    padding:18px 12px;
+  }
+  .clock .time{
+    font-family:var(--sans);
+    font-weight:700;
+    letter-spacing:1px;
+    font-variant-numeric:tabular-nums;
+    line-height:1;
+    color:#332c26;
+  }
+  .clock .date{
+    color:#7d6f61;letter-spacing:2px;
+    margin-top:10px;
+  }
+  .clock .env{
+    display:flex;gap:26px;margin-top:10px;
+    color:#8a6547;letter-spacing:1px;
+  }
+  .s.dark .clock{
+    background:#f7f2e9;border-color:#3d352e;
+    box-shadow:0 0 42px rgba(255,214,170,.28),0 14px 34px rgba(0,0,0,.45);
+  }
+
+  /* 手机对比 */
+  .compare{
+    display:flex;align-items:flex-end;justify-content:center;
+    gap:44px;padding:20px 0 8px;
+  }
+  .cmp{text-align:center;}
+  .cmp .lab{
+    font-size:18px;color:var(--ink3);letter-spacing:.5px;margin-top:16px;
+  }
+  .cmp .lab b{display:block;font-size:20px;color:var(--ink2);margin-bottom:4px;letter-spacing:.5px;}
+  .phone{
+    width:132px;height:272px;border-radius:20px;
+    background:linear-gradient(160deg,#3a332d,#1f1b18);
+    border:3px solid #4b423a;
+    position:relative;
+    box-shadow:0 12px 26px rgba(80,58,40,.22);
+  }
+  .phone::after{
+    content:"";position:absolute;left:50%;top:12px;transform:translateX(-50%);
+    width:38px;height:6px;border-radius:4px;background:#5a4f46;
+  }
+  .phone .scr{
+    position:absolute;inset:22px 8px 12px;border-radius:8px;
+    background:linear-gradient(180deg,#2f2a25,#3b332c);
+  }
+  .phone .scr span{
+    position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);
+    color:#8b7d6e;font-size:15px;letter-spacing:2px;
+  }
+  .clock.big{
+    width:342px;height:246px;
+  }
+  .clock.big .time{font-size:108px;}
+  .clock.big .date{font-size:22px;}
+  .clock.big .env{font-size:22px;}
+
+  /* 三宫格 */
+  .grid3{
+    display:grid;grid-template-columns:repeat(3,1fr);
+    gap:14px;margin:0 0 6px;
+  }
+  .cell{position:relative;}
+  .cell img{
+    width:100%;aspect-ratio:3/4;object-fit:cover;
+    border-radius:6px;display:block;
+    filter:saturate(.82) contrast(.98);
+  }
+  .cell .cap{
+    font-size:19px;line-height:1.6;color:var(--ink2);
+    margin-top:12px;letter-spacing:.5px;
+  }
+  .cell .cap b{display:block;font-family:var(--serif);font-size:24px;color:var(--ink);margin-bottom:4px;letter-spacing:1px;}
+
+  /* 大图 */
+  .figure{
+    width:100%;border-radius:6px;display:block;
+    object-fit:cover;
+    filter:saturate(.85) contrast(.98);
+  }
+  .figure.wide{aspect-ratio:16/9;}
+  .figure.mid{aspect-ratio:4/3;}
+
+  /* 三场景示意 */
+  .scenes{display:flex;flex-direction:column;gap:26px;}
+  .scene{
+    position:relative;border-radius:8px;overflow:hidden;
+    border:1px solid var(--line);
+  }
+  .scene .stage{position:relative;height:290px;background:#e9dece;}
+  .scene .cap{
+    background:var(--card);padding:16px 20px;
+    font-size:20px;color:var(--ink2);letter-spacing:.5px;line-height:1.7;
+  }
+  .scene .cap b{font-family:var(--serif);font-size:24px;color:var(--ink);letter-spacing:1px;}
+
+  /* 场景1 电视柜 */
+  .tv{
+    position:absolute;left:50%;top:34px;transform:translateX(-50%);
+    width:62%;height:126px;background:#2b2622;border-radius:5px;
+  }
+  .tv::after{
+    content:"";position:absolute;left:50%;bottom:-16px;transform:translateX(-50%);
+    width:52px;height:16px;background:#3a332d;
+  }
+  .cab{
+    position:absolute;left:8%;bottom:78px;width:84%;height:56px;
+    background:#8a6547;border-radius:3px;
+    box-shadow:inset 0 -8px 0 rgba(0,0,0,.12);
+  }
+  .cab::before{
+    content:"";position:absolute;left:50%;top:0;bottom:0;width:1px;background:rgba(0,0,0,.18);
+  }
+  .sofa{
+    position:absolute;left:-4%;right:-4%;bottom:-34px;height:110px;
+    background:#b46a4a;border-radius:22px 22px 0 0;
+  }
+  .sofa::before{
+    content:"";position:absolute;left:0;right:0;top:-26px;height:34px;
+    background:#c07a5b;border-radius:20px 20px 0 0;
+  }
+  .mini{
+    position:absolute;bottom:134px;right:13%;
+    width:112px;height:80px;
+    background:var(--card);border:6px solid var(--brown);border-radius:6px;
+    display:flex;align-items:center;justify-content:center;
+    box-shadow:0 6px 14px rgba(80,58,40,.25);
+  }
+  .mini .t{
+    font-size:30px;font-weight:700;letter-spacing:0;color:#332c26;
+    font-variant-numeric:tabular-nums;
+  }
+
+  /* 场景2 床头柜 */
+  .wall2{position:absolute;inset:0;background:#ded1bd;}
+  .wall2::after{
+    content:"";position:absolute;left:0;right:0;bottom:0;height:96px;background:#cfc0a9;
+  }
+  .bed{
+    position:absolute;left:-6%;bottom:56px;width:56%;height:120px;
+    background:#9c8f7e;border-radius:10px 10px 0 0;
+  }
+  .bed::before{
+    content:"";position:absolute;left:0;right:0;top:-26px;height:30px;
+    background:#f4efe6;border-radius:8px 8px 0 0;
+  }
+  .night{
+    position:absolute;right:12%;bottom:56px;width:118px;height:74px;
+    background:#8a6547;border-radius:3px;
+  }
+  .clock2{
+    position:absolute;right:16%;bottom:130px;
+    width:104px;height:76px;
+    background:var(--card);border:5px solid var(--brown);border-radius:5px;
+    display:flex;align-items:center;justify-content:center;
+    box-shadow:0 6px 14px rgba(80,58,40,.22);
+  }
+  .clock2 .t{font-size:27px;font-weight:700;color:#332c26;font-variant-numeric:tabular-nums;}
+  .clock2::after{
+    content:"";position:absolute;left:50%;bottom:-13px;transform:translateX(-50%);
+    width:0;height:0;
+    border-left:16px solid transparent;border-right:16px solid transparent;
+    border-top:14px solid #8a6547;
+  }
+
+  /* 场景3 墙 */
+  .wall3{position:absolute;inset:0;background:#e6d9c7;}
+  .wall3::after{
+    content:"";position:absolute;left:0;right:0;bottom:0;height:64px;background:#cdbda6;
+  }
+  .hang{
+    position:absolute;left:50%;top:44px;transform:translateX(-50%);
+    width:150px;height:110px;
+    background:var(--card);border:7px solid var(--brown);border-radius:6px;
+    display:flex;align-items:center;justify-content:center;
+    box-shadow:0 8px 18px rgba(80,58,40,.2);
+  }
+  .hang .t{font-size:40px;font-weight:700;color:#332c26;font-variant-numeric:tabular-nums;}
+  .hook{
+    position:absolute;left:50%;top:20px;transform:translateX(-50%);
+    width:2px;height:24px;background:#a0907c;
+  }
+  .chair{
+    position:absolute;left:50%;bottom:38px;transform:translateX(-50%);
+    width:70px;height:60px;background:#a89a87;border-radius:4px 4px 0 0;
+    opacity:.55;
+  }
+
+  /* 参数表 */
+  table{width:100%;border-collapse:collapse;font-size:21px;margin:0;}
+  th,td{
+    text-align:left;padding:15px 10px;
+    border-bottom:1px solid var(--line);
+    line-height:1.7;color:var(--ink2);
+  }
+  th{
+    width:38%;color:var(--ink3);font-weight:400;
+  }
+  td{font-weight:600;color:var(--ink);}
+
+  /* 收尾 */
+  .final{
+    text-align:center;padding:64px 52px 72px;
+    background:var(--brown);
+    color:#f7f2e9;
+  }
+  .final .h{color:#fdf9f2;margin-bottom:18px;}
+  .final .note{color:#e8d9c6;}
+  .final .sign{
+    margin-top:34px;font-size:20px;letter-spacing:3px;color:#d9c3ab;
+  }
+
+  @media (max-width:640px){
+    .s{padding:40px 26px;}
+    .s.tight{padding:32px 26px;}
+    .h{font-size:40px;}
+    .h.small{font-size:33px;}
+    .note{font-size:19px;}
+    .kicker{font-size:16px;letter-spacing:4px;}
+    .tiny{font-size:16px;}
+    .clock.big{width:290px;height:208px;}
+    .clock.big .time{font-size:88px;}
+    .clock.big .date{font-size:18px;}
+    .clock.big .env{font-size:18px;}
+    .compare{gap:26px;}
+    .phone{width:104px;height:214px;}
+    .grid3{gap:9px;}
+    .cell .cap{font-size:15px;}
+    .cell .cap b{font-size:18px;}
+    .scene .stage{height:238px;}
+    .scene .cap{font-size:17px;}
+    .scene .cap b{font-size:20px;}
+    table{font-size:17px;}
+    th,td{padding:12px 8px;}
+    .final{padding:48px 26px 56px;}
+  }
+</style>
+</head>
+<body>
+
+<div class="draftbar">
+  <b>样稿说明（发布前删除本行）</b>：这是一版视觉与文案样稿。带「示例」字样的尺寸、续航、价格需要按实际产品填写；视频位需实拍，下方分镜为拍摄脚本。
+</div>
+
+<div class="page">
+
+  <!-- 01 封面 + 视频 -->
+  <section class="s">
+    <p class="kicker">大字时钟</p>
+    <h1 class="h">字大，<br>看得清。</h1>
+    <p class="note">不用换电池，不用调时间。<br>挂上、放下，就一直是准的。</p>
+
+    <div class="player" style="margin-top:34px;">
+      <div class="stage" id="stage"></div>
+      <div class="ctrl">
+        <button class="btn" id="pp" aria-label="播放"><span class="tri" id="ppIcon"></span></button>
+        <button class="btn snd" id="mBtn" title="背景音乐" aria-label="背景音乐">♪</button>
+        <button class="btn snd" id="vBtn" title="人声讲解" aria-label="人声讲解">人</button>
+        <div class="bar" id="bar"><div class="fill" id="fill"></div></div>
+        <span class="tc" id="tc">00:00 / 00:30</span>
+      </div>
+    </div>
+
+    <div class="shots">
+      <span>① 开箱开机</span>
+      <span>② 远景看字</span>
+      <span>③ 手机作比</span>
+      <span>④ 自动对时</span>
+      <span>⑤ 夜光</span>
+      <span>⑥ 提醒响</span>
+      <span>⑦ 温湿度</span>
+      <span>⑧ 按键</span>
+      <span>⑨ 三个位置</span>
+    </div>
+    <p class="tiny">上面是可播放的分镜样片：9 个镜头、共约 30 秒，带人声讲解和轻钢琴配乐；点画面播放或暂停，拖动进度条可跳转，控制条上的 ♪ 和人 两个小键可以分别关掉配乐、关掉人声。实拍成片后，把这一段换成 <code>&lt;video&gt;</code> 即可，其余版式不用动。</p>
+  </section>
+
+  <!-- 02 大字 + 手机对比 -->
+  <section class="s">
+    <p class="kicker">一 · 看清</p>
+    <h2 class="h">数字高 <span class="em">6.5 厘米</span></h2>
+    <p class="note">屏幕上三分之一都是字。<br>坐在沙发上，三米外也认得出几点。</p>
+
+    <div class="compare">
+      <div class="cmp">
+        <div class="phone"><div class="scr"><span>6.1″</span></div></div>
+        <div class="lab"><b>手机</b>6.1 英寸</div>
+      </div>
+      <div class="cmp">
+        <div class="clock big">
+          <div class="time">10:28</div>
+          <div class="date">11月21日 星期五</div>
+          <div class="env"><span>22°C</span><span>48%</span></div>
+        </div>
+        <div class="lab"><b>大字钟</b>8 英寸（示例）</div>
+      </div>
+    </div>
+
+    <p class="tiny">示意图按对角线尺寸等比例排列，左侧为常见 6.1 英寸手机。</p>
+  </section>
+
+  <!-- 03 痛点 -->
+  <section class="s">
+    <p class="kicker">二 · 以前那盏钟</p>
+    <h2 class="h small">总有三件麻烦事</h2>
+
+    <div class="grid3">
+      <div class="cell">
+        <img src="images/yangtou.jpg" alt="仰头看钟">
+        <p class="cap"><b>挂得太高</b>每次都要仰头</p>
+      </div>
+      <div class="cell">
+        <img src="images/miyan.jpg" alt="眯眼看字">
+        <p class="cap"><b>字太小</b>不戴眼镜看不清</p>
+      </div>
+      <div class="cell">
+        <img src="images/dengzi.jpg" alt="踩凳子摘钟">
+        <p class="cap"><b>没电了</b>还得踩凳子摘下来</p>
+      </div>
+    </div>
+
+    <p class="tiny">换完电池，时间还得重新对一遍。</p>
+  </section>
+
+  <!-- 03.5 开箱即用 -->
+  <section class="s">
+    <p class="kicker">三 · 开箱</p>
+    <h2 class="h">拆开，按一下，<br>就<span class="em">开始了</span></h2>
+    <p class="note">不用扫码，不用连手机，不用对着说明书一项项设。<br>出厂就把时间对好了。</p>
+    <p class="note"><b style="color:var(--ink);">不连 WiFi 也能用。</b>时间照常显示，一样看；<br>连上 WiFi，它会自己校准，一直准。</p>
+
+    <div style="display:flex;gap:14px;margin:36px 0 0;">
+      <div style="flex:1;background:var(--card);border:1px solid var(--line);border-radius:8px;padding:26px 14px;text-align:center;">
+        <div style="font-family:var(--serif);font-size:44px;line-height:1;color:var(--clay);font-weight:700;">一</div>
+        <p style="margin:12px 0 0;font-size:21px;color:var(--ink2);letter-spacing:1px;">拆开</p>
+        <p style="margin:6px 0 0;font-size:18px;color:var(--ink3);line-height:1.6;">拿出钟，接上电</p>
+      </div>
+      <div style="flex:1;background:var(--card);border:1px solid var(--line);border-radius:8px;padding:26px 14px;text-align:center;">
+        <div style="font-family:var(--serif);font-size:44px;line-height:1;color:var(--clay);font-weight:700;">二</div>
+        <p style="margin:12px 0 0;font-size:21px;color:var(--ink2);letter-spacing:1px;">按一下</p>
+        <p style="margin:6px 0 0;font-size:18px;color:var(--ink3);line-height:1.6;">按下开关键，屏幕亮</p>
+      </div>
+      <div style="flex:1;background:var(--card);border:1px solid var(--line);border-radius:8px;padding:26px 14px;text-align:center;">
+        <div style="font-family:var(--serif);font-size:44px;line-height:1;color:var(--clay);font-weight:700;">三</div>
+        <p style="margin:12px 0 0;font-size:21px;color:var(--ink2);letter-spacing:1px;">看时间</p>
+        <p style="margin:6px 0 0;font-size:18px;color:var(--ink3);line-height:1.6;">时间已经是对的</p>
+      </div>
+    </div>
+
+    <p class="tiny">说明书只印一页，看图就会；万一不会，打个电话有人一步步教。</p>
+  </section>
+
+  <!-- 04 不用管它 -->
+  <section class="s">
+    <p class="kicker">四 · 装上就不用管</p>
+    <h2 class="h">充一次，<br>用 <span class="em">90 天</span></h2>
+    <p class="note">锂电池充电，不买电池、不搬梯子。<br>连上家里的 WiFi，时间自己校准。</p>
+
+    <img class="figure mid" style="margin-top:30px;" src="images/chongdian.jpg" alt="充电">
+
+    <p class="tiny">停电、断网也不怕，时间不会丢，来电自己恢复；没有 WiFi 的家里，可以用手机热点对一次。</p>
+  </section>
+
+  <!-- 05 夜里 -->
+  <section class="s dark">
+    <p class="kicker">五 · 夜里</p>
+    <h2 class="h">按一下就亮</h2>
+    <p class="note">柔光，不刺眼。<br>起夜看时间，不用开灯，也不吵醒老伴。</p>
+
+    <div style="display:flex;justify-content:center;margin:38px 0 30px;">
+      <div class="clock" style="width:330px;height:236px;">
+        <div class="time" style="font-size:104px;">03:12</div>
+        <div class="date" style="font-size:21px;color:#8a7d6d;">11月22日 星期六</div>
+        <div class="env" style="font-size:21px;color:#a08a72;"><span>21°C</span><span>52%</span></div>
+      </div>
+    </div>
+
+    <img class="figure wide" style="filter:saturate(.7) brightness(.92);" src="images/yeban.jpg" alt="夜间卧室">
+
+    <p class="note" style="margin-top:26px;">亮度分三档，白天亮、夜里暗，也可以整夜不熄。</p>
+  </section>
+
+  <!-- 06 提醒 -->
+  <section class="s">
+    <p class="kicker">六 · 到点</p>
+    <h2 class="h">到点就响，<br>厨房也听得见</h2>
+    <p class="note">早上、午后各设一个。<br>声音大，不用一直盯着钟。</p>
+
+    <img class="figure wide" style="margin-top:30px;" src="images/chufang.jpg" alt="厨房里的老人">
+
+    <p class="tiny">提醒由家人提前设好，到点自动响，响过自动停，不用管。</p>
+  </section>
+
+  <!-- 07 温湿度 -->
+  <section class="s">
+    <p class="kicker">七 · 出门前</p>
+    <h2 class="h">今天穿几件，<br>看钟面上的数</h2>
+    <p class="note">温度和湿度都在钟面上。<br>扫一眼，穿几件、要不要晒被子，心里有数。</p>
+
+    <img class="figure mid" style="margin-top:30px;" src="images/chumen.jpg" alt="出门前加外套">
+  </section>
+
+  <!-- 08 按键 -->
+  <section class="s">
+    <p class="kicker">八 · 好按</p>
+    <h2 class="h">三个大按键</h2>
+    <p class="note">凸起来，摸得到。<br>长按才生效，按错了一键恢复。</p>
+
+    <img class="figure wide" style="margin-top:30px;" src="images/anjian.jpg" alt="按大按键">
+
+    <p class="tiny">不用翻说明书，也不用进菜单。调的时候只有三件事：调时间、设提醒、调亮度。</p>
+  </section>
+
+  <!-- 09 三个位置 -->
+  <section class="s">
+    <p class="kicker">九 · 放哪儿</p>
+    <h2 class="h small">电视柜、床头、<br>或者直接挂墙上</h2>
+
+    <div class="scenes" style="margin-top:28px;">
+
+      <div class="scene">
+        <div class="stage">
+          <div class="tv"></div>
+          <div class="cab"></div>
+          <div class="mini"><span class="t">10:28</span></div>
+          <div class="sofa"></div>
+        </div>
+        <div class="cap"><b>电视柜上</b>　坐在沙发上看电视，一抬眼就知道几点，不用摸手机。</div>
+      </div>
+
+      <div class="scene">
+        <div class="stage">
+          <div class="wall2"></div>
+          <div class="bed"></div>
+          <div class="night"></div>
+          <div class="clock2"><span class="t">10:28</span></div>
+        </div>
+        <div class="cap"><b>床头柜上</b>　背后有支架，立着放，侧面看也稳。</div>
+      </div>
+
+      <div class="scene">
+        <div class="stage">
+          <div class="wall3"></div>
+          <div class="hook"></div>
+          <div class="hang"><span class="t">10:28</span></div>
+          <div class="chair"></div>
+        </div>
+        <div class="cap"><b>挂在墙上</b>　配免打孔挂件，不伤墙，一个人也能装上。</div>
+      </div>
+
+    </div>
+
+    <p class="tiny">三处都放得下的时候，客厅、卧室各一盏，走到哪儿都看得见。</p>
+  </section>
+
+  <!-- 10 参数 -->
+  <section class="s tight">
+    <p class="kicker">十 · 参数</p>
+    <table>
+      <tr><th>屏幕尺寸</th><td>8 英寸（示例）</td></tr>
+      <tr><th>数字高度</th><td>约 6.5 厘米</td></tr>
+      <tr><th>显示内容</th><td>时间、日期、星期、温度、湿度</td></tr>
+      <tr><th>对时方式</th><td>不连 WiFi 也能正常显示；连上 WiFi 自动校准</td></tr>
+      <tr><th>供电</th><td>锂电池充电，一次约 90 天（示例）</td></tr>
+      <tr><th>提醒</th><td>多组定时提醒，音量可调</td></tr>
+      <tr><th>背光</th><td>三档亮度，可按压点亮</td></tr>
+      <tr><th>安装</th><td>壁挂 / 立放两用，附挂件与支架</td></tr>
+      <tr><th>附件</th><td>充电线、挂件、支架、大字说明书</td></tr>
+      <tr><th>保修</th><td>三年</td></tr>
+    </table>
+    <p class="tiny">示例数值以实际产品为准。</p>
+  </section>
+
+  <!-- 11 收尾 -->
+  <section class="final">
+    <h2 class="h">字大，夜里也看得清；<br>不用换电池，不用调时间。</h2>
+    <p class="note">买给爸妈，或者买给自己，都是同一盏。<br>三年保修，说明书看不懂，打个电话就有人教。</p>
+    <p class="sign">大字时钟</p>
+  </section>
+
+  <!-- 拍摄用 · 口播稿（发布前删除本屏） -->
+  <section class="s tight" style="background:#efe7db;">
+    <p class="kicker" style="color:#b4462f;font-size:16px;letter-spacing:3px;">拍摄用 · 口播稿（发布前删除本屏）</p>
+    <p class="note" style="font-size:20px;">全片约 30 秒，九句话，跟九个镜头一一对应。语速放慢，每句之间留半拍气口。页面里的播放器已经按这份稿子念了一遍。</p>
+
+    <div style="margin-top:22px;">
+      <div class="line"><b>00:00</b>拆开，按下开关，它就亮了。</div>
+      <div class="line"><b>00:03</b>数字六点五厘米，三米外看得清。</div>
+      <div class="line"><b>00:07</b>比手机大一圈，不用凑近看。</div>
+      <div class="line"><b>00:10</b>连上网自动对时，不连也照样走。</div>
+      <div class="line"><b>00:13</b>夜里按一下，柔光不刺眼。</div>
+      <div class="line"><b>00:17</b>到点就响，厨房里也听得见。</div>
+      <div class="line"><b>00:20</b>温度湿度都在上面，出门前扫一眼。</div>
+      <div class="line"><b>00:23</b>三个大按键，按错了一键恢复。</div>
+      <div class="line"><b>00:27</b>挂墙上、放柜上、摆床头，都行。</div>
+    </div>
+
+    <p class="tiny">配乐：钢琴独奏，一分钟 60～70 拍，没有人声、没有鼓点；音量压到人声的三分之一，句尾别盖住字。</p>
+  </section>
+
+</div>
+
+<script>
+/* 图片加载失败时的兜底 */
+document.querySelectorAll('img').forEach(function(img){
+  img.addEventListener('error', function(){
+    this.style.background = '#e6d8c6';
+    this.removeAttribute('src');
+  });
+});
+
+/* ---------- 主图视频：9 个镜头的动画播放 ---------- */
+(function(){
+  var STAGE = document.getElementById('stage');
+  if(!STAGE) return;
+
+  function th(t,s){
+    return '<div style="text-align:center;">'
+      + '<div style="width:4.8em;height:3.2em;border:2px solid rgba(240,230,216,.42);border-radius:.3em;'
+      + 'display:flex;align-items:center;justify-content:center;font-size:.72em;color:#e8d8c2;letter-spacing:.1em;">'+t+'</div>'
+      + '<div style="font-size:.48em;color:#c9b9a5;margin-top:.75em;letter-spacing:.06em;">'+s+'</div>'
+      + '</div>';
+  }
+
+  var SCENES = [
+    { d:3.2, bg:'images/kaixiang.jpg',
+      html:'<div class="in"><div class="vt" style="font-size:1.55em;">按一下，就亮了</div>'
+        + '<div class="vtag" style="font-size:.62em;margin-top:1.2em;">出厂已对好时间</div></div>'
+        + '<div class="cap"><b>①</b>开箱，按下开关</div>' },
+
+    { d:3.4,
+      html:'<div class="in"><div class="vt" style="font-size:5.4em;">10:28</div>'
+        + '<div class="vd" style="font-size:.95em;margin-top:.95em;">11月21日 星期五</div>'
+        + '<div class="vtag" style="font-size:.6em;margin-top:1.3em;">三米外看得清</div></div>'
+        + '<div class="cap"><b>②</b>远景看字</div>' },
+
+    { d:3.4,
+      html:'<div class="in" style="flex-direction:row;align-items:flex-end;gap:2.4em;">'
+        + '<div style="text-align:center;"><div style="width:2.6em;height:5.4em;border:3px solid rgba(240,232,220,.5);border-radius:.45em;"></div>'
+        + '<div style="font-size:.55em;color:#d8c8b4;margin-top:.75em;letter-spacing:.1em;">6.1 英寸手机</div></div>'
+        + '<div style="text-align:center;"><div style="width:7.6em;height:4.6em;background:#f7f0e3;border-radius:.3em;'
+        + 'display:flex;align-items:center;justify-content:center;box-shadow:0 10px 40px rgba(0,0,0,.4);">'
+        + '<span style="color:#2f2a25;font-size:2.2em;font-weight:800;letter-spacing:.02em;">10:28</span></div>'
+        + '<div style="font-size:.55em;color:#e6d6c2;margin-top:.75em;letter-spacing:.1em;">8 英寸大字钟</div></div>'
+        + '</div><div class="cap"><b>③</b>和手机比一比</div>' },
+
+    { d:3.2,
+      html:'<div class="in"><div style="position:relative;width:3.4em;height:2.6em;margin-bottom:1em;">'
+        + '<span style="position:absolute;left:50%;bottom:0;transform:translateX(-50%);width:.34em;height:.34em;border-radius:50%;background:#f6ead8;"></span>'
+        + '<span style="position:absolute;left:50%;bottom:0;transform:translateX(-50%);width:1.4em;height:1.4em;border:3px solid rgba(246,234,216,.85);border-radius:50%;clip-path:inset(0 0 50% 0);"></span>'
+        + '<span style="position:absolute;left:50%;bottom:0;transform:translateX(-50%);width:2.4em;height:2.4em;border:3px solid rgba(246,234,216,.42);border-radius:50%;clip-path:inset(0 0 50% 0);"></span>'
+        + '</div><div class="vt" style="font-size:1.45em;">WiFi 已连接</div>'
+        + '<div class="vd" style="font-size:.75em;margin-top:.85em;letter-spacing:.12em;">时间已自动校准</div></div>'
+        + '<div class="cap"><b>④</b>连上就准，不连也能走</div>' },
+
+    { d:3.4, bg:'images/yeban.jpg',
+      html:'<div class="in"><div class="vt" style="font-size:4em;color:#ffe6c8;text-shadow:0 0 44px rgba(255,200,140,.6);">03:12</div>'
+        + '<div class="vtag" style="font-size:.6em;margin-top:1.2em;">按一下就亮，不刺眼</div></div>'
+        + '<div class="cap"><b>⑤</b>夜里</div>' },
+
+    { d:3.4, bg:'images/chufang.jpg',
+      html:'<div class="in"><div style="padding:.45em 1.3em;border:2px solid rgba(255,214,170,.9);border-radius:.35em;">'
+        + '<span style="font-size:2.2em;font-weight:800;color:#ffe2bd;letter-spacing:.04em;">08:00</span></div>'
+        + '<div class="vt" style="font-size:1.15em;margin-top:.9em;">到点了</div></div>'
+        + '<div class="cap"><b>⑥</b>厨房也听得见</div>' },
+
+    { d:3.2,
+      html:'<div class="in" style="flex-direction:row;gap:2.2em;align-items:center;">'
+        + '<div style="text-align:center;"><div class="vt" style="font-size:3.1em;">22°C</div>'
+        + '<div class="vd" style="font-size:.55em;margin-top:.8em;letter-spacing:.18em;">室温</div></div>'
+        + '<div style="width:1px;height:4em;background:rgba(240,230,214,.25);"></div>'
+        + '<div style="text-align:center;"><div class="vt" style="font-size:3.1em;">48%</div>'
+        + '<div class="vd" style="font-size:.55em;margin-top:.8em;letter-spacing:.18em;">湿度</div></div></div>'
+        + '<div class="cap"><b>⑦</b>出门前看一眼，穿几件心里有数</div>' },
+
+    { d:3.4, bg:'images/anjian.jpg',
+      html:'<div class="in" style="justify-content:flex-end;padding-bottom:2.6em;">'
+        + '<div style="display:flex;gap:1.1em;">'
+        + '<span style="width:1.1em;height:1.1em;border-radius:50%;background:#ffd2a8;"></span>'
+        + '<span style="width:1.1em;height:1.1em;border-radius:50%;background:rgba(255,241,226,.5);"></span>'
+        + '<span style="width:1.1em;height:1.1em;border-radius:50%;background:rgba(255,241,226,.28);"></span>'
+        + '</div></div><div class="cap"><b>⑧</b>三个键，按错能恢复</div>' },
+
+    { d:3.4,
+      html:'<div class="in"><div style="display:flex;gap:1.3em;">'
+        + th('电视柜','抬头就看见')
+        + th('床头','躺下也看得清')
+        + th('墙面','挂高也不怕')
+        + '</div></div><div class="cap"><b>⑨</b>挂墙、放柜、摆床头</div>' }
+  ];
+
+  var layer = [], cur = -1, t = 0, playing = false, timer = null;
+  SCENES.forEach(function(s){
+    var el = document.createElement('div');
+    el.className = 'sc';
+    if(s.bg){
+      el.style.backgroundImage = 'url("' + s.bg + '")';
+    }else{
+      el.style.background = 'radial-gradient(circle at 50% 42%, #3c3128 0%, #262019 58%, #1a1512 100%)';
+    }
+    el.innerHTML = s.html;
+    STAGE.appendChild(el);
+    layer.push(el);
+  });
+
+  var subEl = document.createElement('div');
+  subEl.className = 'sub';
+  STAGE.appendChild(subEl);
+
+  var big = document.createElement('div');
+  big.className = 'bigplay';
+  big.innerHTML = '<span><i></i></span><div class="hint">点击播放 · 含人声讲解</div>';
+  STAGE.appendChild(big);
+
+  var total = Math.round(SCENES.reduce(function(a,b){ return a + b.d; }, 0) * 100) / 100;
+  var fill = document.getElementById('fill');
+  var tc   = document.getElementById('tc');
+  var pp   = document.getElementById('pp');
+  var icon = document.getElementById('ppIcon');
+  var bar  = document.getElementById('bar');
+  var mBtn = document.getElementById('mBtn');
+  var vBtn = document.getElementById('vBtn');
+
+  /* ---------- 声音：九句口播 + 轻钢琴背景音 ---------- */
+  var SAYS = [
+    '拆开，按下开关，它就亮了。',
+    '数字六点五厘米，三米外看得清。',
+    '比手机大一圈，不用凑近看。',
+    '连上网自动对时，不连也照样走。',
+    '夜里按一下，柔光不刺眼。',
+    '到点就响，厨房里也听得见。',
+    '温度湿度都在上面，出门前扫一眼。',
+    '三个大按键，按错了一键恢复。',
+    '挂墙上、放柜上、摆床头，都行。'
+  ];
+
+  var musicOn = true, voiceOn = true;
+  var AC = null, musicTimer = null, mStep = 0, zhVoice = null;
+  /* C 大调五声琶音，一轮十拍，循环 */
+  var ARP = [261.63, 329.63, 392.00, 523.25, 440.00, 392.00, 329.63, 293.66, 349.23, 261.63];
+
+  function initAudio(){
+    if(AC) return;
+    try{
+      var Ctx = window.AudioContext || window.webkitAudioContext;
+      if(Ctx) AC = new Ctx();
+    }catch(e){ AC = null; }
+    if(!AC && mBtn) mBtn.style.display = 'none';
+  }
+
+  function note(freq, when, dur, vol){
+    if(!AC) return;
+    var osc = AC.createOscillator();
+    var flt = AC.createBiquadFilter();
+    var g   = AC.createGain();
+    osc.type = 'triangle';
+    osc.frequency.value = freq;
+    flt.type = 'lowpass';
+    flt.frequency.value = 2400;
+    g.gain.setValueAtTime(0.0001, when);
+    g.gain.exponentialRampToValueAtTime(vol, when + 0.02);
+    g.gain.exponentialRampToValueAtTime(0.0001, when + dur);
+    osc.connect(flt); flt.connect(g); g.connect(AC.destination);
+    osc.start(when); osc.stop(when + dur + 0.06);
+  }
+
+  function tickMusic(){
+    if(!AC) return;
+    var now = AC.currentTime + 0.03;
+    var f = ARP[mStep % ARP.length];
+    note(f, now, 1.8, 0.05);
+    if(mStep % 5 === 0) note(f / 2, now, 2.4, 0.038);
+    mStep++;
+  }
+  function startMusic(){
+    if(!musicOn || !AC || musicTimer) return;
+    tickMusic();
+    musicTimer = setInterval(tickMusic, 560);
+  }
+  function stopMusic(){
+    clearInterval(musicTimer); musicTimer = null;
+  }
+
+  function pickVoice(){
+    if(!window.speechSynthesis) return;
+    var vs = window.speechSynthesis.getVoices() || [];
+    var i;
+    for(i=0;i<vs.length;i++){ if(/^zh[-_]CN/i.test(vs[i].lang)){ zhVoice = vs[i]; return; } }
+    for(i=0;i<vs.length;i++){ if(/^zh/i.test(vs[i].lang)){ zhVoice = vs[i]; return; } }
+  }
+  function speak(txt){
+    if(!voiceOn || !txt || !window.speechSynthesis) return;
+    try{
+      window.speechSynthesis.cancel();
+      var u = new SpeechSynthesisUtterance(txt);
+      u.lang = 'zh-CN';
+      u.rate = 0.95;
+      u.pitch = 1.02;
+      u.volume = 1;
+      if(zhVoice) u.voice = zhVoice;
+      window.speechSynthesis.speak(u);
+    }catch(e){}
+  }
+  function stopVoice(){
+    if(window.speechSynthesis) window.speechSynthesis.cancel();
+  }
+
+  if(window.speechSynthesis){
+    pickVoice();
+    window.speechSynthesis.onvoiceschanged = pickVoice;
+  }else if(vBtn){
+    vBtn.style.display = 'none';
+  }
+
+  function fmt(x){
+    var s = Math.floor(x);
+    return ('0' + Math.floor(s/60)).slice(-2) + ':' + ('0' + (s%60)).slice(-2);
+  }
+  function fit(){ STAGE.style.fontSize = Math.max(10, STAGE.clientWidth / 40) + 'px'; }
+
+  function paint(){
+    var acc = 0, idx = SCENES.length - 1;
+    for(var i=0;i<SCENES.length;i++){
+      if(t < acc + SCENES[i].d){ idx = i; break; }
+      acc += SCENES[i].d;
+    }
+    if(idx !== cur){
+      cur = idx;
+      for(var k=0;k<layer.length;k++){ layer[k].classList.toggle('on', k === idx); }
+      subEl.textContent = SAYS[idx] || '';
+      if(playing) speak(SAYS[idx]);
+    }
+    fill.style.width = Math.min(100, t/total*100) + '%';
+    tc.textContent = fmt(t) + ' / ' + fmt(total);
+  }
+
+  function stop(){
+    playing = false;
+    clearInterval(timer); timer = null;
+    icon.className = 'tri'; icon.innerHTML = '';
+    stopVoice(); stopMusic();
+  }
+  function play(){
+    if(playing) return;
+    initAudio();
+    if(AC && AC.state === 'suspended'){ AC.resume(); }
+    if(t >= total) t = 0;
+    playing = true;
+    big.classList.add('hide');
+    icon.className = 'pausebar'; icon.innerHTML = '<i></i><i></i>';
+    cur = -1; paint();      /* 立刻对齐镜头并开口念第一句 */
+    startMusic();
+    timer = setInterval(function(){
+      t += 0.05;
+      if(t >= total){ t = total; paint(); stop(); big.classList.remove('hide'); return; }
+      paint();
+    }, 50);
+  }
+  function toggle(){ playing ? stop() : play(); }
+
+  pp.addEventListener('click', function(e){ e.stopPropagation(); toggle(); });
+  STAGE.addEventListener('click', toggle);
+  big.addEventListener('click', function(e){ e.stopPropagation(); play(); });
+  bar.addEventListener('click', function(e){
+    var r = bar.getBoundingClientRect();
+    t = Math.max(0, Math.min(1, (e.clientX - r.left) / r.width)) * total;
+    paint();
+  });
+
+  if(mBtn){
+    mBtn.addEventListener('click', function(e){
+      e.stopPropagation();
+      musicOn = !musicOn;
+      mBtn.classList.toggle('off', !musicOn);
+      if(musicOn && playing){
+        initAudio();
+        if(AC && AC.state === 'suspended'){ AC.resume(); }
+        startMusic();
+      }else{
+        stopMusic();
+      }
+    });
+  }
+  if(vBtn){
+    vBtn.addEventListener('click', function(e){
+      e.stopPropagation();
+      voiceOn = !voiceOn;
+      vBtn.classList.toggle('off', !voiceOn);
+      if(voiceOn && playing){ speak(SAYS[cur]); }else{ stopVoice(); }
+    });
+  }
+
+  window.addEventListener('resize', fit);
+  fit(); paint();
+})();
+</script>
+
+</body>
+</html>
